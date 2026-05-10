@@ -1,8 +1,43 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import api from "../services/api";
 
 function CreateTrip({ darkMode, setDarkMode }) {
   const navigate = useNavigate();
+
+  const [title, setTitle] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [budget, setBudget] = useState("");
+
+  const handleSubmit = async () => {
+    try {
+      const response = await api.post("/trips", {
+        title,
+        startDate,
+        endDate,
+        budget,
+      });
+
+      console.log(response.data);
+
+      alert("Trip Created Successfully!");
+
+      navigate("/itinerary", {
+        state: {
+          title,
+          budget,
+          startDate,
+          endDate,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+
+      alert("Backend connection failed");
+    }
+  };
 
   return (
     <div
@@ -36,6 +71,8 @@ function CreateTrip({ darkMode, setDarkMode }) {
             <input
               type="text"
               placeholder="Enter trip name"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               className={`${
                 darkMode
                   ? "bg-slate-800 text-white"
@@ -58,6 +95,8 @@ function CreateTrip({ darkMode, setDarkMode }) {
 
               <input
                 type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
                 className={`${
                   darkMode
                     ? "bg-slate-800 text-white"
@@ -77,6 +116,8 @@ function CreateTrip({ darkMode, setDarkMode }) {
 
               <input
                 type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
                 className={`${
                   darkMode
                     ? "bg-slate-800 text-white"
@@ -100,6 +141,8 @@ function CreateTrip({ darkMode, setDarkMode }) {
             <input
               type="number"
               placeholder="Enter budget"
+              value={budget}
+              onChange={(e) => setBudget(e.target.value)}
               className={`${
                 darkMode
                   ? "bg-slate-800 text-white"
@@ -111,7 +154,7 @@ function CreateTrip({ darkMode, setDarkMode }) {
           {/* Button */}
 
           <button
-            onClick={() => navigate("/itinerary")}
+            onClick={handleSubmit}
             className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl text-lg transition-all duration-300"
           >
             Generate Itinerary
