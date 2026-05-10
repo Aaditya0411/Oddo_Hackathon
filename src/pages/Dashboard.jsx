@@ -19,6 +19,16 @@ function Dashboard({ darkMode, setDarkMode }) {
     }
   };
 
+  const deleteTrip = async (id) => {
+    try {
+      await api.delete(`/trips/${id}`);
+
+      fetchTrips();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div
       className={`${
@@ -44,9 +54,16 @@ function Dashboard({ darkMode, setDarkMode }) {
 
               <p className="text-gray-400 mb-2">Budget: ₹{trip.budget}</p>
 
-              <p className="text-gray-400">
+              <p className="text-gray-400 mb-6">
                 {trip.startDate} → {trip.endDate}
               </p>
+
+              <button
+                onClick={() => deleteTrip(trip._id)}
+                className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl"
+              >
+                Delete
+              </button>
             </div>
           ))}
         </div>

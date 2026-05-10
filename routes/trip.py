@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from bson import ObjectId
 from database.db import db
 
 trip = Blueprint("trip", __name__)
@@ -26,6 +27,21 @@ def create_trip():
 @trip.route("/trips", methods=["GET"])
 def get_trips():
 
-    trips = list(db.trips.find({}, {"_id": 0}))
+    trips = list(db.trips.find())
+
+    for trip_item in trips:
+        trip_item["_id"] = str(trip_item["_id"])
 
     return trips
+
+# Delete Trip
+@trip.route("/trips/<id>", methods=["DELETE"])
+def delete_trip(id):
+
+    db.trips.delete_one({
+        "_id": ObjectId(id)
+    })
+
+    return {
+        "message": "Trip Deleted Successfully"
+    }
