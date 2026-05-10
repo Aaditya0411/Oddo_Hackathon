@@ -6,8 +6,7 @@ from routes.itinerary import itinerary
 
 app = Flask(__name__)
 
-CORS(app)
-
+CORS(app, origins=["https://traveloop-tau-ebon.vercel.app"])
 app.register_blueprint(trip)
 app.register_blueprint(itinerary)
 
